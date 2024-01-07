@@ -1,6 +1,9 @@
-set dotenv-path := ".env"
-set dotenv-load := true
+set dotenv-load
 
-# Compiles and uploads the `water-sensor-alert` sketch to the given `$ARDUINO_BOARD` and `$ARDUINO_PORT`
-upload:
-    arduino-cli compile -u -b $ARDUINO_BOARD -p $ARDUINO_PORT ./water-sensor-alert
+acceptance-tests:
+    cargo clippy --no-deps --all-features -- -Dwarnings
+    cargo build --all-features
+
+flash:
+    cargo build --release
+    ravedude --port $ARDUINO_PORT $ARDUINO_BOARD target/avr-atmega328p/release/water-sensor-alert.elf
